@@ -1,160 +1,87 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-const airplane = new Image();
-airplane.src = 'airplane.png';
-const cloudImage = new Image();
-cloudImage.src = 'cloud.png';
-const collisionSound = new Audio('collision.mp3');
+const plane = new Image();
+plane.src = 'airplane.png'; // Substitua pelo caminho da imagem do avião
+const cloud = new Image();
+cloud.src = 'cloud.png'; // Substitua pelo caminho da imagem da nuvem
 
-let airplaneX = 100;
-let airplaneY = 200;
-let speed = 2;
+let planeX = canvas.width / 2;
+let planeY = canvas.height - 100;
 let score = 0;
-let level = 1;
 let clouds = [];
 let gameOver = false;
 
-const airplaneWidth = 50;
-const airplaneHeight = 50;
-const reducedAirplaneWidth = airplaneWidth * 0.9;
-const reducedAirplaneHeight = airplaneHeight * 0.9;
-
-// Carregar os seis melhores scores do localStorage
-let highScores = JSON.parse(localStorage.getItem('highScores')) || [
-    { name: '---', score: 0 },
-    { name: '---', score: 0 },
-    { name: '---', score: 0 },
-    { name: '---', score: 0 },
-    { name: '---', score: 0 },
-    { name: '---', score: 0 }
-];
-
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowUp') {
-        airplaneY -= 15; // Aumentar a velocidade do movimento para cima
-    } else if (event.key === 'ArrowDown') {
-        airplaneY += 15; // Aumentar a velocidade do movimento para baixo
-    } else if (event.key === 'ArrowLeft') {
-        airplaneX -= 15; // Aumentar a velocidade do movimento para trás
-    } else if (event.key === 'ArrowRight') {
-        airplaneX += 15; // Aumentar a velocidade do movimento para frente
-    } else if (event.key === ' ') {
-        if (gameOver) {
-            resetGame();
-        }
-    }
-});
-
-// Variáveis para controlar o movimento contínuo
-let moveUp = false;
-let moveDown = false;
-let moveLeft = false;
-let moveRight = false;
-
-// Adicionar eventos de toque para os botões de controle
-document.getElementById('up').addEventListener('touchstart', () => moveUp = true);
-document.getElementById('up').addEventListener('touchend', () => moveUp = false);
-document.getElementById('down').addEventListener('touchstart', () => moveDown = true);
-document.getElementById('down').addEventListener('touchend', () => moveDown = false);
-document.getElementById('left').addEventListener('touchstart', () => moveLeft = true);
-document.getElementById('left').addEventListener('touchend', () => moveLeft = false);
-document.getElementById('right').addEventListener('touchstart', () => moveRight = true);
-document.getElementById('right').addEventListener('touchend', () => moveRight = false);
-
-// Adicionar eventos para o botão de reset
-document.getElementById('reset').addEventListener('click', resetGame);
-
-function addCloud() {
-    const cloud = {
-        x: canvas.width,
-        y: Math.random() * canvas.height,
-        width: 50,
-        height: 50
-    };
-    clouds.push(cloud);
+function drawPlane() {
+    ctx.drawImage(plane, planeX, planeY, 50, 50);
 }
 
-function update() {
-    if (gameOver) return;
-
-    // Atualizar a posição do avião com base nos controles
-    if (moveUp) airplaneY -= 5;
-    if (moveDown) airplaneY += 5;
-    if (moveLeft) airplaneX -= 5;
-    if (moveRight) airplaneX += 5;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(airplane, airplaneX, airplaneY, reducedAirplaneWidth, reducedAirplaneHeight);
-
-    // Desenhar pontuação
-    ctx.font = '20px Arial';
-    ctx.fillStyle = 'black';
-    ctx.fillText('Score: ' + score, canvas.width - 100, 30);
-
-    // Desenhar os seis melhores scores
-    ctx.fillText('High Scores:', 10, 30);
-    highScores.forEach((record, index) => {
-        ctx.fillText(`${index + 1}. ${record.name}: ${record.score}`, 10, 60 + index * 30);
-    });
-
-    if (Math.random() < 0.02) {
-        addCloud();
-    }
-
-    clouds.forEach((cloud, index) => {
-        cloud.x -= speed;
-        ctx.drawImage(cloudImage, cloud.x, cloud.y, cloud.width, cloud.height);
-
-        if (cloud.x + cloud.width < 0) {
-            clouds.splice(index, 1);
+function drawClouds() {
+    clouds.forEach(cloud => {
+        ctx.drawImage(cloud.img, cloud.x, cloud.y, 50, 50);
+        cloud.y += 2;
+        if (cloud.y > canvas.height) {
+            cloud.y = -50;
+            cloud.x = Math.random() * canvas.width;
             score++;
-            if (score % 50 === 0) {
-                level++;
-                speed += 1;
-            }
+            document.getElementById('score').innerText = score;
         }
-
-        if (
-            airplaneX < cloud.x + cloud.width &&
-            airplaneX + reducedAirplaneWidth > cloud.x &&
-            airplaneY < cloud.y + cloud.height &&
-            airplaneY + reducedAirplaneHeight > cloud.y
-        ) {
+        if (planeX < cloud.x + 50 && planeX + 50 > cloud.x && planeY < cloud.y + 50 && planeY + 50 > cloud.y) {
             gameOver = true;
-            collisionSound.play().catch(error => console.log('Audio playback failed:', error));
-            const playerName = prompt('Game Over! Score: ' + score + '\nDigite seu nome:');
-            updateHighScores(playerName, score);
-            alert('Pressione a tecla de espaço para reiniciar.');
+            let playerName = prompt('Game Over! Insira seu nome:');
+            saveScore(playerName, score);
+            // Adicione lógica para salvar o score
         }
     });
-
-    requestAnimationFrame(update);
 }
 
-function updateHighScores(name, score) {
-    highScores.push({ name, score });
-    highScores.sort((a, b) => b.score - a.score);
-    highScores = highScores.slice(0, 6);
-    localStorage.setItem('highScores', JSON.stringify(highScores));
+function gameLoop() {
+    if (gameOver) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPlane();
+    drawClouds();
+    requestAnimationFrame(gameLoop);
 }
 
-function resetGame() {
-    airplaneX = 100;
-    airplaneY = 200;
-    speed = 2;
-    score = 0;
-    level = 1;
-    clouds = [];
-    gameOver = false;
-    update();
+function createClouds() {
+    for (let i = 0; i < 5; i++) {
+        clouds.push({
+            img: cloud,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height
+        });
+    }
 }
 
-airplane.onload = () => {
-    console.log('Airplane image loaded');
-    update();
-};
+function saveScore(name, score) {
+    let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
+    highscores.push({ name, score });
+    highscores.sort((a, b) => b.score - a.score);
+    highscores = highscores.slice(0, 6);
+    localStorage.setItem('highscores', JSON.stringify(highscores));
+    displayHighscores();
+}
 
-cloudImage.onload = () => {
-    console.log('Cloud image loaded');
-};
+function displayHighscores() {
+    const highscores = JSON.parse(localStorage.getItem('highscores')) || [];
+    const highscoresList = document.getElementById('highscores');
+    highscoresList.innerHTML = '';
+    highscores.forEach(score => {
+        const li = document.createElement('li');
+        li.textContent = `${score.name}: ${score.score}`;
+        highscoresList.appendChild(li);
+    });
+}
+
+document.getElementById('up').addEventListener('click', () => planeY -= 10);
+document.getElementById('down').addEventListener('click', () => planeY += 10);
+document.getElementById('left').addEventListener('click', () => planeX -= 10);
+document.getElementById('right').addEventListener('click', () => planeX += 10);
+document.getElementById('restart').addEventListener('click', () => location.reload());
+document.getElementById('close').addEventListener('click', () => window.close());
+
+createClouds();
+displayHighscores();
+gameLoop();

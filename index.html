@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Airplane Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Avião</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas"></canvas>
     <div id="controls">
-        <button id="up">↑</button>
-        <div>
-            <button id="left">←</button>
-            <button id="down">↓</button>
-            <button id="right">→</button>
-        </div>
+        <button id="up">↑</button><br>
+        <button id="left">←</button>
+        <button id="down">↓</button>
+        <button id="right">→</button>
     </div>
-    <div id="fullscreen-controls">
-        <button id="reset">🔄</button>
+    <div id="actions">
+        <button id="restart">Recomeçar</button>
+        <button id="close">Fechar</button>
+    </div>
+    <div id="scoreboard">
+        <h3>Melhores Pontuações</h3>
+        <ol id="highscores">
+            <!-- Scores serão adicionados aqui -->
+        </ol>
+    </div>
+    <div id="current-score">
+        <h3>Pontuação: <span id="score">0</span></h3>
     </div>
     <script src="script.js"></script>
 </body>
