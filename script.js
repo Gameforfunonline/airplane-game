@@ -17,6 +17,24 @@ let cloudSpeed = 2;
 let moveSpeed = 5;
 let keys = {};
 
+async function fetchScores() {
+    const response = await fetch('http://localhost:3000/scores');
+    const scores = await response.json();
+    return scores;
+}
+
+async function saveScore(name, score) {
+    const response = await fetch('http://localhost:3000/scores', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, score })
+    });
+    const newScore = await response.json();
+    displayHighscores();
+}
+
 function drawPlane() {
     ctx.drawImage(plane, planeX, planeY, 50, 50);
 }
@@ -30,7 +48,7 @@ function drawClouds() {
             cloud.x = Math.random() * canvas.width;
             score++;
             document.getElementById('score').innerText = score;
-            if (score % 50 === 0) {
+            if (score % 20 === 0) { // Aumenta a velocidade a cada 20 pontos
                 cloudSpeed++;
                 createClouds(2); // Adiciona mais nuvens
             }
@@ -62,17 +80,8 @@ function createClouds(amount = 5) {
     }
 }
 
-function saveScore(name, score) {
-    let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
-    highscores.push({ name, score });
-    highscores.sort((a, b) => b.score - a.score);
-    highscores = highscores.slice(0, 6);
-    localStorage.setItem('highscores', JSON.stringify(highscores));
-    displayHighscores();
-}
-
-function displayHighscores() {
-    const highscores = JSON.parse(localStorage.getItem('highscores')) || [];
+async function displayHighscores() {
+    const highscores = await fetchScores();
     const highscoresList = document.getElementById('highscores');
     highscoresList.innerHTML = '';
     highscores.forEach(score => {
