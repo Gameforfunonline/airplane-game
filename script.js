@@ -62,6 +62,9 @@ document.getElementById('left').addEventListener('touchend', () => moveLeft = fa
 document.getElementById('right').addEventListener('touchstart', () => moveRight = true);
 document.getElementById('right').addEventListener('touchend', () => moveRight = false);
 
+// Adicionar eventos para o botão de reset
+document.getElementById('reset').addEventListener('click', resetGame);
+
 function addCloud() {
     const cloud = {
         x: canvas.width,
@@ -119,7 +122,7 @@ function update() {
             airplaneY + reducedAirplaneHeight > cloud.y
         ) {
             gameOver = true;
-            collisionSound.play();
+            collisionSound.play().catch(error => console.log('Audio playback failed:', error));
             const playerName = prompt('Game Over! Score: ' + score + '\nDigite seu nome:');
             updateHighScores(playerName, score);
             alert('Pressione a tecla de espaço para reiniciar.');
