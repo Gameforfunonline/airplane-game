@@ -48,7 +48,7 @@ function drawClouds() {
             cloud.x = Math.random() * canvas.width;
             score++;
             document.getElementById('score').innerText = score;
-            if (score % 20 === 0) { // Aumenta a velocidade a cada 20 pontos
+            if (score % 40 === 0) { // Aumenta a velocidade a cada 40 pontos
                 cloudSpeed++;
                 createClouds(2); // Adiciona mais nuvens
             }
