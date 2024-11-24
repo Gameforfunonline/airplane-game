@@ -62,6 +62,41 @@ document.getElementById('left').addEventListener('touchend', () => moveLeft = fa
 document.getElementById('right').addEventListener('touchstart', () => moveRight = true);
 document.getElementById('right').addEventListener('touchend', () => moveRight = false);
 
+// Adicionar eventos para os botões de tela cheia e reset
+document.getElementById('reset').addEventListener('click', resetGame);
+document.getElementById('exit-fullscreen').addEventListener('click', exitFullscreen);
+
+// Função para entrar em tela cheia
+function enterFullscreen() {
+    if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+    } else if (canvas.mozRequestFullScreen) { // Firefox
+        canvas.mozRequestFullScreen();
+    } else if (canvas.webkitRequestFullscreen) { // Chrome, Safari and Opera
+        canvas.webkitRequestFullscreen();
+    } else if (canvas.msRequestFullscreen) { // IE/Edge
+        canvas.msRequestFullscreen();
+    }
+}
+
+// Função para sair da tela cheia
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+        document.msExitFullscreen();
+    }
+}
+
+// Entrar em tela cheia automaticamente em dispositivos móveis
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+    enterFullscreen();
+}
+
 function addCloud() {
     const cloud = {
         x: canvas.width,
@@ -121,37 +156,4 @@ function update() {
             gameOver = true;
             collisionSound.play();
             const playerName = prompt('Game Over! Score: ' + score + '\nDigite seu nome:');
-            updateHighScores(playerName, score);
-            alert('Pressione a tecla de espaço para reiniciar.');
-        }
-    });
-
-    requestAnimationFrame(update);
-}
-
-function updateHighScores(name, score) {
-    highScores.push({ name, score });
-    highScores.sort((a, b) => b.score - a.score);
-    highScores = highScores.slice(0, 6);
-    localStorage.setItem('highScores', JSON.stringify(highScores));
-}
-
-function resetGame() {
-    airplaneX = 100;
-    airplaneY = 200;
-    speed = 2;
-    score = 0;
-    level = 1;
-    clouds = [];
-    gameOver = false;
-    update();
-}
-
-airplane.onload = () => {
-    console.log('Airplane image loaded');
-    update();
-};
-
-cloudImage.onload = () => {
-    console.log('Cloud image loaded');
-};
+            updateHigh
