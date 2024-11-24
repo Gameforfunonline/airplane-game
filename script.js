@@ -32,7 +32,6 @@ function drawClouds() {
             gameOver = true;
             let playerName = prompt('Game Over! Insira seu nome:');
             saveScore(playerName, score);
-            // Adicione lógica para salvar o score
         }
     });
 }
@@ -75,10 +74,10 @@ function displayHighscores() {
     });
 }
 
-document.getElementById('up').addEventListener('click', () => planeY -= 10);
-document.getElementById('down').addEventListener('click', () => planeY += 10);
-document.getElementById('left').addEventListener('click', () => planeX -= 10);
-document.getElementById('right').addEventListener('click', () => planeX += 10);
+document.getElementById('up').addEventListener('click', () => planeY = Math.max(0, planeY - 10));
+document.getElementById('down').addEventListener('click', () => planeY = Math.min(canvas.height - 50, planeY + 10));
+document.getElementById('left').addEventListener('click', () => planeX = Math.max(0, planeX - 10));
+document.getElementById('right').addEventListener('click', () => planeX = Math.min(canvas.width - 50, planeX + 10));
 document.getElementById('restart').addEventListener('click', () => location.reload());
 document.getElementById('close').addEventListener('click', () => window.close());
 
