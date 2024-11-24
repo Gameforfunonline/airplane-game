@@ -91,12 +91,23 @@ function updatePlanePosition() {
 
 document.getElementById('up').addEventListener('mousedown', () => keys['ArrowUp'] = true);
 document.getElementById('up').addEventListener('mouseup', () => keys['ArrowUp'] = false);
+document.getElementById('up').addEventListener('touchstart', () => keys['ArrowUp'] = true);
+document.getElementById('up').addEventListener('touchend', () => keys['ArrowUp'] = false);
+
 document.getElementById('down').addEventListener('mousedown', () => keys['ArrowDown'] = true);
 document.getElementById('down').addEventListener('mouseup', () => keys['ArrowDown'] = false);
+document.getElementById('down').addEventListener('touchstart', () => keys['ArrowDown'] = true);
+document.getElementById('down').addEventListener('touchend', () => keys['ArrowDown'] = false);
+
 document.getElementById('left').addEventListener('mousedown', () => keys['ArrowLeft'] = true);
 document.getElementById('left').addEventListener('mouseup', () => keys['ArrowLeft'] = false);
+document.getElementById('left').addEventListener('touchstart', () => keys['ArrowLeft'] = true);
+document.getElementById('left').addEventListener('touchend', () => keys['ArrowLeft'] = false);
+
 document.getElementById('right').addEventListener('mousedown', () => keys['ArrowRight'] = true);
 document.getElementById('right').addEventListener('mouseup', () => keys['ArrowRight'] = false);
+document.getElementById('right').addEventListener('touchstart', () => keys['ArrowRight'] = true);
+document.getElementById('right').addEventListener('touchend', () => keys['ArrowRight'] = false);
 
 document.getElementById('restart').addEventListener('click', () => location.reload());
 document.getElementById('close').addEventListener('click', () => window.close());
