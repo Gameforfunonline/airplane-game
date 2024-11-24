@@ -14,6 +14,8 @@ let score = 0;
 let clouds = [];
 let gameOver = false;
 let cloudSpeed = 2;
+let moveSpeed = 5;
+let keys = {};
 
 function drawPlane() {
     ctx.drawImage(plane, planeX, planeY, 50, 50);
@@ -46,6 +48,7 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawPlane();
     drawClouds();
+    updatePlanePosition();
     requestAnimationFrame(gameLoop);
 }
 
@@ -79,12 +82,27 @@ function displayHighscores() {
     });
 }
 
-document.getElementById('up').addEventListener('click', () => planeY = Math.max(0, planeY - 10));
-document.getElementById('down').addEventListener('click', () => planeY = Math.min(canvas.height - 50, planeY + 10));
-document.getElementById('left').addEventListener('click', () => planeX = Math.max(0, planeX - 10));
-document.getElementById('right').addEventListener('click', () => planeX = Math.min(canvas.width - 50, planeX + 10));
+function updatePlanePosition() {
+    if (keys['ArrowUp']) planeY = Math.max(0, planeY - moveSpeed);
+    if (keys['ArrowDown']) planeY = Math.min(canvas.height - 50, planeY + moveSpeed);
+    if (keys['ArrowLeft']) planeX = Math.max(0, planeX - moveSpeed);
+    if (keys['ArrowRight']) planeX = Math.min(canvas.width - 50, planeX + moveSpeed);
+}
+
+document.getElementById('up').addEventListener('mousedown', () => keys['ArrowUp'] = true);
+document.getElementById('up').addEventListener('mouseup', () => keys['ArrowUp'] = false);
+document.getElementById('down').addEventListener('mousedown', () => keys['ArrowDown'] = true);
+document.getElementById('down').addEventListener('mouseup', () => keys['ArrowDown'] = false);
+document.getElementById('left').addEventListener('mousedown', () => keys['ArrowLeft'] = true);
+document.getElementById('left').addEventListener('mouseup', () => keys['ArrowLeft'] = false);
+document.getElementById('right').addEventListener('mousedown', () => keys['ArrowRight'] = true);
+document.getElementById('right').addEventListener('mouseup', () => keys['ArrowRight'] = false);
+
 document.getElementById('restart').addEventListener('click', () => location.reload());
 document.getElementById('close').addEventListener('click', () => window.close());
+
+window.addEventListener('keydown', (e) => keys[e.key] = true);
+window.addEventListener('keyup', (e) => keys[e.key] = false);
 
 createClouds();
 displayHighscores();
