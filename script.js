@@ -156,4 +156,4 @@ function update() {
             gameOver = true;
             collisionSound.play();
             const playerName = prompt('Game Over! Score: ' + score + '\nDigite seu nome:');
-            updateHigh
+            updateHighScores(playerName
