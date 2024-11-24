@@ -13,6 +13,7 @@ let planeY = canvas.height - 100;
 let score = 0;
 let clouds = [];
 let gameOver = false;
+let cloudSpeed = 2;
 
 function drawPlane() {
     ctx.drawImage(plane, planeX, planeY, 50, 50);
@@ -21,12 +22,16 @@ function drawPlane() {
 function drawClouds() {
     clouds.forEach(cloud => {
         ctx.drawImage(cloud.img, cloud.x, cloud.y, 50, 50);
-        cloud.y += 2;
+        cloud.y += cloudSpeed;
         if (cloud.y > canvas.height) {
             cloud.y = -50;
             cloud.x = Math.random() * canvas.width;
             score++;
             document.getElementById('score').innerText = score;
+            if (score % 50 === 0) {
+                cloudSpeed++;
+                createClouds(2); // Adiciona mais nuvens
+            }
         }
         if (planeX < cloud.x + 50 && planeX + 50 > cloud.x && planeY < cloud.y + 50 && planeY + 50 > cloud.y) {
             gameOver = true;
@@ -44,8 +49,8 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-function createClouds() {
-    for (let i = 0; i < 5; i++) {
+function createClouds(amount = 5) {
+    for (let i = 0; i < amount; i++) {
         clouds.push({
             img: cloud,
             x: Math.random() * canvas.width,
