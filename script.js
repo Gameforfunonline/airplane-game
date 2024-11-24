@@ -46,11 +46,21 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+// Variáveis para controlar o movimento contínuo
+let moveUp = false;
+let moveDown = false;
+let moveLeft = false;
+let moveRight = false;
+
 // Adicionar eventos de toque para os botões de controle
-document.getElementById('up').addEventListener('touchstart', () => airplaneY -= 15);
-document.getElementById('down').addEventListener('touchstart', () => airplaneY += 15);
-document.getElementById('left').addEventListener('touchstart', () => airplaneX -= 15);
-document.getElementById('right').addEventListener('touchstart', () => airplaneX += 15);
+document.getElementById('up').addEventListener('touchstart', () => moveUp = true);
+document.getElementById('up').addEventListener('touchend', () => moveUp = false);
+document.getElementById('down').addEventListener('touchstart', () => moveDown = true);
+document.getElementById('down').addEventListener('touchend', () => moveDown = false);
+document.getElementById('left').addEventListener('touchstart', () => moveLeft = true);
+document.getElementById('left').addEventListener('touchend', () => moveLeft = false);
+document.getElementById('right').addEventListener('touchstart', () => moveRight = true);
+document.getElementById('right').addEventListener('touchend', () => moveRight = false);
 
 function addCloud() {
     const cloud = {
@@ -64,6 +74,12 @@ function addCloud() {
 
 function update() {
     if (gameOver) return;
+
+    // Atualizar a posição do avião com base nos controles
+    if (moveUp) airplaneY -= 5;
+    if (moveDown) airplaneY += 5;
+    if (moveLeft) airplaneX -= 5;
+    if (moveRight) airplaneX += 5;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(airplane, airplaneX, airplaneY, reducedAirplaneWidth, reducedAirplaneHeight);

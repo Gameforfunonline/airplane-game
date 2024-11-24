@@ -17,6 +17,12 @@ canvas {
     left: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#controls div {
+    display: flex;
     gap: 10px;
 }
 
