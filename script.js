@@ -46,6 +46,12 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+// Adicionar eventos de toque para os botões de controle
+document.getElementById('up').addEventListener('touchstart', () => airplaneY -= 15);
+document.getElementById('down').addEventListener('touchstart', () => airplaneY += 15);
+document.getElementById('left').addEventListener('touchstart', () => airplaneX -= 15);
+document.getElementById('right').addEventListener('touchstart', () => airplaneX += 15);
+
 function addCloud() {
     const cloud = {
         x: canvas.width,

@@ -10,3 +10,26 @@ body {
 canvas {
     background-color: white; /* Alterar o fundo do canvas para branco */
 }
+
+#controls {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#controls button {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#controls button:active {
+    background-color: #aaa;
+}
